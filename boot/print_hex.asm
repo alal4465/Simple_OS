@@ -28,7 +28,7 @@ print_hex:
 	add al, 0x30
 
 .print_char:
-	int 0x10
+	int 0x10      ; print char
 
 	dec cx
 	cmp cx, 0
