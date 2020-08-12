@@ -25,8 +25,9 @@ disk_err:
     mov bx, DISK_ERROR
     call print_str
 
-    mov dh, ah ; ah = error code
+    mov bh, ah ; ah = error code
 	       ; dl = faulty driver
+    mov bl, al
     call print_hex
     jmp disk_loop
 

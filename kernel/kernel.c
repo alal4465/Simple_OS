@@ -1,5 +1,11 @@
+#include "../drivers/screen.h"
 
 void main(){
-	char* video_memory = (char*) 0xb8000;
-	*video_memory = 'X';
+
+	screen_clear();
+
+	char *kernel_message = "Started the kernel successfully!\n";
+
+	kprint(kernel_message);
+
 }
