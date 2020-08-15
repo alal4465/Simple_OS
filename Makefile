@@ -1,7 +1,9 @@
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS   = $(wildcard kernel/*.h drivers/*.h)
 
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o kernel/idt_common.o}
+
+#OBJ = ${C_SOURCES:.c=.o}
 
 CC  = i686-elf-gcc
 LD  = i686-elf-ld
@@ -30,5 +32,5 @@ run: os_img.bin
 
 clean:
 	rm  *.bin  *.o os-image.bin *.elf
-	rm  kernel/*.o boot/*.bin drivers/*.o boot/*.o
+	rm  kernel/*.o kernel/*.bin boot/*.bin drivers/*.o boot/*.o
 
