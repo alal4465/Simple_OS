@@ -7,7 +7,7 @@ typedef struct s_context
 	unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
 	unsigned int int_no, err_code;
 	unsigned int eip, cs, eflags, useresp, ss;
-} context_t;
+} __attribute__((packed)) context_t;
 
-#endif
+#endif /* ISR_H  */
 
