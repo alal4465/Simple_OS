@@ -1,9 +1,6 @@
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS   = $(wildcard kernel/*.h drivers/*.h)
-
-OBJ = ${C_SOURCES:.c=.o kernel/idt_common.o}
-
-#OBJ = ${C_SOURCES:.c=.o}
+OBJ       = ${C_SOURCES:.c=.o kernel/idt_common.o}
 
 CC  = i686-elf-gcc
 LD  = i686-elf-ld
