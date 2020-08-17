@@ -1,5 +1,10 @@
 #include "isr.h"
-#include "../drivers/screen.h"
+
+void (*isr_callbacks[16])();
+
+void register_isr_callback(int irq,void (*callback)()){
+	isr_callbacks[irq-IRQ0]=callback;
+}
 
 void isr_handler(context_t regs)
 {
@@ -15,3 +20,16 @@ void isr_handler(context_t regs)
 	kprint(msg_arr[regs.int_no]);
 }
 
+void irq_handler(context_t regs)
+{
+	byte_out(0x20, 0x20);
+	if (regs.int_no >= IRQ8){
+		byte_out(0xA0, 0x20);
+	}
+	if (isr_callbacks[regs.int_no-IRQ0]!=0){
+		(*isr_callbacks[regs.int_no-IRQ0])();
+	}
+	else{
+		kprint("Recieved IRQ\n");
+	}
+}

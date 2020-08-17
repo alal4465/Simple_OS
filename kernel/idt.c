@@ -1,5 +1,6 @@
 #include "idt.h"
 
+
 idt_entry idt[256];
 idt_reg idtr;
 
@@ -9,6 +10,35 @@ void set_idt_entry(int index, unsigned int base){
     	idt[index].selector  = KERNEL_CS;
 	idt[index].reserved  = 0;
 	idt[index].flags     = IDT_FLAGS;
+}
+
+void watch(){
+	static unsigned int time=0;
+	char s[2];
+	s[1] = '\0';
+
+	if(time%1000==0){
+		s[0] = ((time/1000) % 10) + 0x30;
+		kprint("Tick:");
+		kprint(s);
+		kprint("\n");
+	}
+	time+=55;
+}
+
+void init_irq(){
+	byte_out(0x20, 0x11);
+	byte_out(0xA0, 0x11);
+	byte_out(0x21, 0x20);
+	byte_out(0xA1, 0x28);
+	byte_out(0x21, 0x04);
+	byte_out(0xA1, 0x02);
+	byte_out(0x21, 0x01);
+	byte_out(0xA1, 0x01);
+	byte_out(0x21, 0x0);
+	byte_out(0xA1, 0x0);
+	
+	register_isr_callback(IRQ0,&watch);
 }
 
 void init_idt(){
@@ -47,22 +77,22 @@ void init_idt(){
 	set_idt_entry(29,(unsigned int)isr29);
 	set_idt_entry(30,(unsigned int)isr30);
 	set_idt_entry(31,(unsigned int)isr31);
-	set_idt_entry(32,(unsigned int)isr32);
-	set_idt_entry(33,(unsigned int)isr33);
-	set_idt_entry(34,(unsigned int)isr34);
-	set_idt_entry(35,(unsigned int)isr35);
-	set_idt_entry(36,(unsigned int)isr36);
-	set_idt_entry(37,(unsigned int)isr37);
-	set_idt_entry(38,(unsigned int)isr38);
-	set_idt_entry(39,(unsigned int)isr39);
-	set_idt_entry(40,(unsigned int)isr40);
-	set_idt_entry(41,(unsigned int)isr41);
-	set_idt_entry(42,(unsigned int)isr42);
-	set_idt_entry(43,(unsigned int)isr43);
-	set_idt_entry(44,(unsigned int)isr44);
-	set_idt_entry(45,(unsigned int)isr45);
-	set_idt_entry(46,(unsigned int)isr46);
-	set_idt_entry(47,(unsigned int)isr47);
+	set_idt_entry(32,(unsigned int)irq0);
+	set_idt_entry(33,(unsigned int)irq1);
+	set_idt_entry(34,(unsigned int)irq2);
+	set_idt_entry(35,(unsigned int)irq3);
+	set_idt_entry(36,(unsigned int)irq4);
+	set_idt_entry(37,(unsigned int)irq5);
+	set_idt_entry(38,(unsigned int)irq6);
+	set_idt_entry(39,(unsigned int)irq7);
+	set_idt_entry(40,(unsigned int)irq8);
+	set_idt_entry(41,(unsigned int)irq9);
+	set_idt_entry(42,(unsigned int)irq10);
+	set_idt_entry(43,(unsigned int)irq11);
+	set_idt_entry(44,(unsigned int)irq12);
+	set_idt_entry(45,(unsigned int)irq13);
+	set_idt_entry(46,(unsigned int)irq14);
+	set_idt_entry(47,(unsigned int)irq15);
 	set_idt_entry(48,(unsigned int)isr48);
 	set_idt_entry(49,(unsigned int)isr49);
 	set_idt_entry(50,(unsigned int)isr50);
@@ -273,4 +303,7 @@ void init_idt(){
 	set_idt_entry(255,(unsigned int)isr255);
 
 	load_idt((unsigned int) &idtr);
+
+	init_irq();
+	__asm__("sti");
 }
