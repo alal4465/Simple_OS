@@ -6,14 +6,16 @@ CC  = i686-elf-gcc
 LD  = i686-elf-ld
 QMU = qemu-system-x86_64
 
+lnk_script = link.ld
+
 os_img.bin: boot/bootsector.bin kernel.bin
 	cat $^ > $@
 
 kernel.bin: boot/enter_kernel.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
+	${LD} -o $@ -T${lnk_script} $^ --oformat binary
 
 kernel.elf: boot/enter_kernel.o ${OBJ}
-	${LD} -o $@ -Ttext 0x1000 $^ 
+	${LD} -o $@ -T${lnk_script} $^ 
 
 run: os_img.bin
 	${QMU} -fda $<
@@ -30,4 +32,3 @@ run: os_img.bin
 clean:
 	rm  *.bin  *.o os-image.bin *.elf
 	rm  kernel/*.o kernel/*.bin boot/*.bin drivers/*.o boot/*.o
-
