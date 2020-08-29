@@ -10,3 +10,4 @@ A basic operating system written in C and asm in order to learn some osdev.
 - [x] interrupts
 - [x] IRQs
 - [x] Bootloader from scratch
+- [x] Basic libc functions implementation
