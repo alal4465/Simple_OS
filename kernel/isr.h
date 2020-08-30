@@ -29,7 +29,9 @@ typedef struct s_context
 	unsigned int eip, cs, eflags, useresp, ss;
 } __attribute__((packed)) context_t;
 
-void register_isr_callback(int irq,void (*callback)());
+typedef void (*interrupt_handler)(context_t ctx);
 
+void register_isr_callback(int irq,void (*callback)());
+void register_interrupt_handler(unsigned int n, interrupt_handler handler);
 #endif /* ISR_H  */
 
