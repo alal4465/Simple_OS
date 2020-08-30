@@ -1,9 +1,14 @@
 #include "isr.h"
 
 void (*isr_callbacks[16])();
+interrupt_handler interrupt_handlers[256];
 
 void register_isr_callback(int irq,void (*callback)()){
 	isr_callbacks[irq-IRQ0]=callback;
+}
+
+void register_interrupt_handler(unsigned int index, interrupt_handler handler){
+	interrupt_handlers[index] = handler;
 }
 
 void isr_handler(context_t regs)
@@ -18,6 +23,9 @@ void isr_handler(context_t regs)
 	msg_arr[0x80] = "0x80\n";
 
 	kprint(msg_arr[regs.int_no]);
+
+	if (interrupt_handlers[regs.int_no] != 0)
+		interrupt_handlers[regs.int_no](regs);
 }
 
 void irq_handler(context_t regs)
